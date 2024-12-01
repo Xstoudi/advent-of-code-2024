@@ -1,0 +1,27 @@
+{
+	"name": "advent-of-code-2024",
+	"version": "1.0.0",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"start": "tsx ./src/runner.ts"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"volta": {
+		"node": "23.3.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@types/node": "^22.10.1",
+		"@types/pretty-ms": "^4.0.0",
+		"tsx": "^4.19.2",
+		"typescript": "^5.7.2"
+	},
+	"dependencies": {
+		"pretty-ms": "^9.2.0",
+		"table": "^6.8.2"
+	}
+}
