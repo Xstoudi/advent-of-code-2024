@@ -1,9 +1,8 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import Day from '../utils/day'
-import type { TimedResult } from '../utils/decorators/cache'
 import Cache from '../utils/decorators/cache'
-import Timed from '../utils/decorators/timed'
+import Timed, { type TimedResult } from '../utils/decorators/timed'
 
 class Day01 extends Day {
 	get #content() {
@@ -30,7 +29,7 @@ class Day01 extends Day {
 	}
 
 	@Timed
-	async part1(): Promise<TimedResult<number>> {
+	async part1(): Promise<TimedResult> {
 		return (await this.#cleanInput())
 			.map((arrays) => arrays.toSorted((a, b) => a - b))
 			.reduce((arrays, current) => {
@@ -38,24 +37,21 @@ class Day01 extends Day {
 
 				return arrays.map((value, index) => Math.abs(value - current[index]))
 			}, null)
-			.reduce(
-				(value, current) => value + current,
-				0,
-			) as unknown as TimedResult<number>
+			.reduce((value, current) => value + current, 0) as unknown as TimedResult
 	}
 
 	@Timed
-	async part2(): Promise<TimedResult<number>> {
+	async part2(): Promise<TimedResult> {
 		const [references, toCount] = await this.#cleanInput()
 		return references.reduce(
 			(previous, current) =>
-				previous + current * this.countOccurences(current, toCount),
+				previous + current * this.countOccurrences(current, toCount),
 			0,
-		) as unknown as TimedResult<number>
+		) as unknown as TimedResult
 	}
 
-	@Cache
-	countOccurences(search: number, array: number[]) {
+	@Cache(['search'])
+	countOccurrences(search: number, array: number[]) {
 		return array.filter((value) => value === search).length
 	}
 }
