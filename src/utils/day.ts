@@ -3,12 +3,15 @@ import type { TableUserConfig } from 'table/dist/src/types/api'
 import type { TimedResult } from './decorators/timed'
 
 export default abstract class Day {
+	abstract nth(): string
+	abstract name(): string
+
 	abstract part1(): Promise<TimedResult>
 	abstract part2(): Promise<TimedResult>
 
 	async run() {
 		const data = [
-			['Day 01 - Historian Hysteria', '', ''],
+			[`Day ${this.nth()} - ${this.name()}`, '', ''],
 			['Part', 'Time', 'Result'],
 			...(await Promise.all([this.part1(), this.part2()])).map(
 				({ time, result }: TimedResult, index: number) => [
