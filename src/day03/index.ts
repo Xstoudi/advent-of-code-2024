@@ -29,15 +29,14 @@ class Day03 extends Day {
 		return 'Mull It Over'
 	}
 
-	get #content() {
+	input() {
 		return readFile(join(import.meta.dirname, 'input.txt'), {
 			encoding: 'utf-8',
 		})
 	}
 
 	@Timed
-	async part1(): Promise<TimedResult> {
-		const input = await this.#content
+	async part1(input: string): Promise<TimedResult> {
 		const mulRegex = /mul\((?<x>[1-9][0-9]{0,2}),(?<y>[1-9][0-9]{0,2})\)/gs
 
 		return [...input.matchAll(mulRegex)].reduce((acc, matches) => {
@@ -47,8 +46,7 @@ class Day03 extends Day {
 	}
 
 	@Timed
-	async part2(): Promise<TimedResult> {
-		const input = await this.#content
+	async part2(input: string): Promise<TimedResult> {
 		const mulRegex =
 			/(mul\((?<x>[1-9][0-9]{0,2}),(?<y>[1-9][0-9]{0,2})\))|(?<doo>do\(\))|(?<dont>don't\(\))/gs
 

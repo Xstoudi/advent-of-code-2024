@@ -2,6 +2,7 @@ const days = [
 	() => import('./day01'),
 	() => import('./day02'),
 	() => import('./day03'),
+	() => import('./day04'),
 ]
 
 const dayIdentifier = Number.parseInt(process.argv.at(2) ?? '', 10)

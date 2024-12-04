@@ -12,14 +12,14 @@ class Day02 extends Day {
 		return 'Red-Nosed Reports'
 	}
 
-	get #content() {
+	input() {
 		return readFile(join(import.meta.dirname, 'input.txt'), {
 			encoding: 'utf-8',
 		})
 	}
 
-	async #cleanInput(): Promise<number[][]> {
-		return (await this.#content)
+	#cleanInput(input: string): number[][] {
+		return input
 			.split('\n')
 			.map((line) => line.trim())
 			.map((line) => line.split(' '))
@@ -27,17 +27,14 @@ class Day02 extends Day {
 	}
 
 	@Timed
-	async part1(): Promise<TimedResult> {
-		const input = await this.#cleanInput()
-
-		return input.filter((x) => this.#isReportSafe(x))
+	async part1(input: string): Promise<TimedResult> {
+		return this.#cleanInput(input).filter((x) => this.#isReportSafe(x))
 			.length as unknown as TimedResult
 	}
 
 	@Timed
-	async part2(): Promise<TimedResult> {
-		const input = await this.#cleanInput()
-		const x = input.filter((line) => {
+	async part2(input: string): Promise<TimedResult> {
+		const x = this.#cleanInput(input).filter((line) => {
 			if (this.#isReportSafe(line)) {
 				return true
 			}

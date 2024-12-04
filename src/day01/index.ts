@@ -13,14 +13,14 @@ class Day01 extends Day {
 		return 'Historian Hysteria'
 	}
 
-	get #content() {
+	input() {
 		return readFile(join(import.meta.dirname, 'input.txt'), {
 			encoding: 'utf-8',
 		})
 	}
 
-	async #cleanInput(): Promise<[number[], number[]]> {
-		return (await this.#content)
+	#cleanInput(input: string): [number[], number[]] {
+		return input
 			.split('\n')
 			.map((line) => line.trim())
 			.map((line) => line.split('   '))
@@ -37,9 +37,8 @@ class Day01 extends Day {
 	}
 
 	@Timed
-	async part1(): Promise<TimedResult> {
-		const cleaned = await this.#cleanInput()
-		return cleaned
+	async part1(input: string): Promise<TimedResult> {
+		return this.#cleanInput(input)
 			.map((arrays) => arrays.toSorted((a, b) => a - b))
 			.reduce(
 				(arrays, current) =>
@@ -57,8 +56,8 @@ class Day01 extends Day {
 	}
 
 	@Timed
-	async part2(): Promise<TimedResult> {
-		const [references, toCount] = await this.#cleanInput()
+	async part2(input: string): Promise<TimedResult> {
+		const [references, toCount] = this.#cleanInput(input)
 		return references.reduce(
 			(previous, current) =>
 				previous + current * this.countOccurrences(current, toCount),

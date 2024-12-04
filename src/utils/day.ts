@@ -6,14 +6,17 @@ export default abstract class Day {
 	abstract nth(): string
 	abstract name(): string
 
-	abstract part1(): Promise<TimedResult>
-	abstract part2(): Promise<TimedResult>
+	abstract part1(input: string): Promise<TimedResult>
+	abstract part2(input: string): Promise<TimedResult>
+
+	abstract input(): Promise<string>
 
 	async run() {
+		const input = await this.input()
 		const data = [
 			[`Day ${this.nth()} - ${this.name()}`, '', ''],
 			['Part', 'Time', 'Result'],
-			...(await Promise.all([this.part1(), this.part2()])).map(
+			...(await Promise.all([this.part1(input), this.part2(input)])).map(
 				({ time, result }: TimedResult, index: number) => [
 					index + 1,
 					time,
