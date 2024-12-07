@@ -39,69 +39,66 @@ class Day07 extends Day {
 
 	@Timed
 	async part1(input: string): Promise<TimedResult> {
-		const equations = this.#parse(input)
-
-		let totalCalibrationResult = 0
-		for (const equation of equations) {
-			const operatorCombinations = this.generateOperatorCombinations(
-				equation.equationMembers.length,
-				Operators1,
-			)
-
-			for (const operatorCombination of operatorCombinations) {
-				let memberIndex = 0
-				let total = equation.equationMembers[memberIndex++]
-				for (const operator of operatorCombination) {
-					if (operator === Operators1.PLUS) {
-						total += equation.equationMembers[memberIndex++]
-					} else if (operator === Operators1.TIMES) {
-						total *= equation.equationMembers[memberIndex++]
-					} else {
-						throw new Error(`Unknown operator ${JSON.stringify(operator)}`)
-					}
-				}
-				if (total === equation.controlValue) {
-					totalCalibrationResult += equation.controlValue
-					break
-				}
-			}
-		}
-		return totalCalibrationResult as unknown as TimedResult
+		return this.#parse(input).reduce(
+			(acc, equation) =>
+				this.generateOperatorCombinations(
+					equation.equationMembers.length - 1,
+					Operators1,
+				).find(
+					(operatorCombination) =>
+						operatorCombination.reduce(
+							(currentTotal, operator, index) => {
+								const nextMember = equation.equationMembers[index + 1]
+								switch (operator) {
+									case Operators1.PLUS:
+										return currentTotal + nextMember
+									case Operators1.TIMES:
+										return currentTotal * nextMember
+									default:
+										throw new Error(
+											`Unknown operator ${JSON.stringify(operator)}`,
+										)
+								}
+							},
+							equation.equationMembers[0], // Start with the first member
+						) === equation.controlValue,
+				)
+					? acc + equation.controlValue
+					: acc,
+			0,
+		) as unknown as TimedResult
 	}
 
 	@Timed
 	async part2(input: string): Promise<TimedResult> {
-		const equations = this.#parse(input)
-
-		let totalCalibrationResult = 0
-		for (const equation of equations) {
-			const operatorCombinations = this.generateOperatorCombinations(
-				equation.equationMembers.length,
-				Operators2,
-			)
-
-			for (const operatorCombination of operatorCombinations) {
-				let memberIndex = 0
-				let total = equation.equationMembers[memberIndex++]
-				for (const operator of operatorCombination) {
-					const member = equation.equationMembers[memberIndex++]
-					if (operator === Operators2.PLUS) {
-						total += member
-					} else if (operator === Operators2.TIMES) {
-						total *= member
-					} else if (operator === Operators2.CONCAT) {
-						total = total * 10 ** Math.ceil(Math.log10(member + 1)) + member
-					} else {
-						throw new Error('Unknown operator')
-					}
-				}
-				if (total === equation.controlValue) {
-					totalCalibrationResult += equation.controlValue
-					break
-				}
-			}
-		}
-		return totalCalibrationResult as unknown as TimedResult
+		return this.#parse(input).reduce(
+			(acc, equation) =>
+				this.generateOperatorCombinations(
+					equation.equationMembers.length - 1,
+					Operators2,
+				).find(
+					(operatorCombination) =>
+						operatorCombination.reduce((currentTotal, operator, index) => {
+							const member = equation.equationMembers[index + 1]
+							switch (operator) {
+								case Operators2.PLUS:
+									return currentTotal + member
+								case Operators2.TIMES:
+									return currentTotal * member
+								case Operators2.CONCAT:
+									return (
+										currentTotal * 10 ** Math.ceil(Math.log10(member + 1)) +
+										member
+									)
+								default:
+									throw new Error('Unknown operator')
+							}
+						}, equation.equationMembers[0]) === equation.controlValue,
+				)
+					? acc + equation.controlValue
+					: acc,
+			0,
+		) as unknown as TimedResult
 	}
 
 	#parse(input: string): Line[] {
@@ -116,20 +113,21 @@ class Day07 extends Day {
 			}))
 	}
 
-	@Cache(['terms', 'ops'])
+	@Cache(['operatorsCount', 'ops'])
 	generateOperatorCombinations(
-		terms: number,
+		operatorsCount: number,
 		ops: typeof Operators1 | typeof Operators2,
 	): OperatorKey[][] {
-		const operatorsCount = terms - 1
-		if (operatorsCount <= 0) {
-			return [[]]
-		}
-
-		const combinations = this.generateOperatorCombinations(operatorsCount, ops)
-		return combinations.flatMap((combination) => [
-			...Object.keys(ops).map((op) => [op as OperatorKey, ...combination]),
-		])
+		return operatorsCount <= 0
+			? [[]]
+			: this.generateOperatorCombinations(operatorsCount - 1, ops).flatMap(
+					(combination) => [
+						...Object.keys(ops).map((op) => [
+							op as OperatorKey,
+							...combination,
+						]),
+					],
+				)
 	}
 }
 
