@@ -79,52 +79,66 @@ class Day06 extends Day {
 
 	@Timed
 	async part2(input: string): Promise<TimedResult> {
-		let matrix = this.#asMatrix(input)
+		const matrix = this.#asMatrix(input)
 		const startSquare = this.#extractStart(matrix)
 
 		let currentDirection = startSquare.direction
 		let cursorPosition = startSquare.position
-		let loops = 0
 
-		for (let yObstacle = 0; yObstacle < matrix.length; yObstacle++) {
-			for (let xObstacle = 0; xObstacle < matrix[0].length; xObstacle++) {
-				if (matrix[yObstacle][xObstacle].type === TypeEnum.BLOCK) continue
-				matrix[yObstacle][xObstacle].type = TypeEnum.BLOCK
-				const visited: Set<string> = new Set()
-				for (;;) {
-					visited.add(
-						`${cursorPosition.x},${cursorPosition.y}.${currentDirection}`,
-					)
-					const nextPosition = this.#nextPosition(
-						cursorPosition,
-						currentDirection,
-					)
-					const nextSquare = matrix[nextPosition.y]?.[nextPosition.x] ?? null
-					if (nextSquare === null) {
-						break
-					}
-					if (
-						visited.has(
-							`${nextSquare.position.x},${nextSquare.position.y}.${currentDirection}`,
-						)
-					) {
-						loops++
-						break
-					}
+		const toCheckForObstruction = new Set<string>()
+		for (;;) {
+			const nextPosition = this.#nextPosition(cursorPosition, currentDirection)
+			toCheckForObstruction.add(`${cursorPosition.x},${cursorPosition.y}`)
 
-					if (nextSquare.type === TypeEnum.BLOCK) {
-						currentDirection = this.#turnRight(currentDirection)
-					} else {
-						cursorPosition = nextSquare.position
-					}
-				}
-				matrix = this.#resetVisits(matrix)
-				currentDirection = startSquare.direction
-				cursorPosition = { ...startSquare.position }
-				matrix[yObstacle][xObstacle].type = TypeEnum.EMPTY
+			const nextSquare = matrix[nextPosition.y]?.[nextPosition.x] ?? null
+			if (nextSquare === null) {
+				break
+			}
+			if (nextSquare.type === TypeEnum.BLOCK) {
+				currentDirection = this.#turnRight(currentDirection)
+			} else {
+				cursorPosition = nextSquare.position
 			}
 		}
 
+		let loops = 0
+		for (const obstructionDescription of toCheckForObstruction) {
+			const [xObstacle, yObstacle] = obstructionDescription
+				.split(',')
+				.map((x) => Number(x))
+			matrix[yObstacle][xObstacle].type = TypeEnum.BLOCK
+			const visited: Set<string> = new Set()
+			for (;;) {
+				visited.add(
+					`${cursorPosition.x},${cursorPosition.y}.${currentDirection}`,
+				)
+				const nextPosition = this.#nextPosition(
+					cursorPosition,
+					currentDirection,
+				)
+				const nextSquare = matrix[nextPosition.y]?.[nextPosition.x] ?? null
+				if (nextSquare === null) {
+					break
+				}
+				if (
+					visited.has(
+						`${nextSquare.position.x},${nextSquare.position.y}.${currentDirection}`,
+					)
+				) {
+					loops++
+					break
+				}
+
+				if (nextSquare.type === TypeEnum.BLOCK) {
+					currentDirection = this.#turnRight(currentDirection)
+				} else {
+					cursorPosition = nextSquare.position
+				}
+			}
+			currentDirection = startSquare.direction
+			cursorPosition = { ...startSquare.position }
+			matrix[yObstacle][xObstacle].type = TypeEnum.EMPTY
+		}
 		return loops as unknown as TimedResult
 	}
 
@@ -141,16 +155,6 @@ class Day06 extends Day {
 			default:
 				throw new Error('Invalid DirectionEnum')
 		}
-	}
-
-	#resetVisits(matrix: Square[][]) {
-		return matrix.map((line) =>
-			line.map((elem) => ({
-				...elem,
-				visited: false,
-				visitDirection: null,
-			})),
-		)
 	}
 
 	#extractStart(matrix: Square[][]): StartSquare {

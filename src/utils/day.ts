@@ -16,7 +16,7 @@ export default abstract class Day {
 		const data = [
 			[`Day ${this.nth()} - ${this.name()}`, '', ''],
 			['Part', 'Time', 'Result'],
-			...(await Promise.all([this.part1(input), this.part2(input)])).map(
+			...[await this.part1(input), await this.part2(input)].map(
 				({ time, result }: TimedResult, index: number) => [
 					index + 1,
 					time,
