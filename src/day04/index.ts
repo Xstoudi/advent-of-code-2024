@@ -5,7 +5,7 @@ import Timed, { type TimedResult } from '../utils/decorators/timed'
 
 type Letter = 'X' | 'M' | 'A' | 'S'
 
-class Day04 extends Day {
+export default class Day04 extends Day {
 	#letterSequence: Letter[] = ['X', 'M', 'A', 'S']
 
 	nth() {
@@ -129,6 +129,3 @@ class Day04 extends Day {
 			)
 	}
 }
-
-const day04 = new Day04()
-await day04.run()

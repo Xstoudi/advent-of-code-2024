@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import Day from '../utils/day'
 import Timed, { type TimedResult } from '../utils/decorators/timed'
 
-class Day05 extends Day {
+export default class Day05 extends Day {
 	nth() {
 		return '05'
 	}
@@ -86,6 +86,3 @@ class Day05 extends Day {
 		return comeAfterRules
 	}
 }
-
-const day05 = new Day05()
-await day05.run()

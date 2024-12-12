@@ -20,7 +20,7 @@ type XOR<T, U> =
 	| (U & Partial<Record<keyof T, never>>)
 type Match = XOR<Mul, XOR<Do, Dont>>
 
-class Day03 extends Day {
+export default class Day03 extends Day {
 	nth() {
 		return '03'
 	}
@@ -75,6 +75,3 @@ class Day03 extends Day {
 		).sum as unknown as TimedResult
 	}
 }
-
-const day03 = new Day03()
-await day03.run()

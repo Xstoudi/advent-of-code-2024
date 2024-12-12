@@ -4,7 +4,7 @@ import Day from '../utils/day'
 import Cache from '../utils/decorators/cache'
 import Timed, { type TimedResult } from '../utils/decorators/timed'
 
-class Day01 extends Day {
+export default class Day01 extends Day {
 	nth() {
 		return '01'
 	}
@@ -70,6 +70,3 @@ class Day01 extends Day {
 		return array.filter((value) => value === search).length
 	}
 }
-
-const day01 = new Day01()
-await day01.run()

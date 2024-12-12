@@ -22,7 +22,7 @@ const Operators2 = {
 
 type OperatorKey = keyof typeof Operators1 | keyof typeof Operators2
 
-class Day07 extends Day {
+export default class Day07 extends Day {
 	nth() {
 		return '07'
 	}
@@ -130,6 +130,3 @@ class Day07 extends Day {
 				)
 	}
 }
-
-const day07 = new Day07()
-await day07.run()

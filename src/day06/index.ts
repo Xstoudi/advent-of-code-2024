@@ -35,7 +35,7 @@ type Square =
 			type: TypeEnum.BLOCK
 	  }
 
-class Day06 extends Day {
+export default class Day06 extends Day {
 	nth() {
 		return '06'
 	}
@@ -228,6 +228,3 @@ class Day06 extends Day {
 		)
 	}
 }
-
-const day06 = new Day06()
-await day06.run()
