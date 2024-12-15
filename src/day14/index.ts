@@ -1,6 +1,5 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { deflate } from 'pako'
 
 import Day from '../utils/day'
 import Timed, { type TimedResult } from '../utils/decorators/timed'

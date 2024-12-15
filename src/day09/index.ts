@@ -1,8 +1,6 @@
-import { secureHeapUsed } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import Day from '../utils/day'
-import Cache from '../utils/decorators/cache'
 import Timed, { type TimedResult } from '../utils/decorators/timed'
 
 type File1 = { type: 'file'; id: number }
